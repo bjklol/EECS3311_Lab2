@@ -30,8 +30,8 @@ feature -- Constructor
 		do
 			create imp.make_filled (unavailable_slot, 7, 7)
 		ensure
-			board_set: True
-				-- Your task.
+			board_set:
+				Current ~ bta.templates.default_board-- Your task.(done?)
 		end
 
 	make_easy
@@ -52,67 +52,83 @@ feature -- Constructor
 	make_cross
 			-- Initialize a Cross board.
 		do
-			make_easy
-			-- Your task: the current implementation
-			-- may not be correct.
+			make_default
+			set_statuses(1,7,3,5, unoccupied_slot)
+			set_statuses(3,5,1,7, unoccupied_slot)
+			set_statuses(2,5,4,4, occupied_slot)
+			set_statuses(4,4,3,5, occupied_slot)
+			-- Your task
 		ensure
-			board_set: True
-				-- Your task.
+			board_set: Current ~ bta.templates.cross_board
 		end
 
 	make_plus
 			-- Initialize a Plus board.
 		do
-			make_easy
-			-- Your task: the current implementation
-			-- may not be correct.
+			make_cross
+			set_status(3,3, unoccupied_slot)
+			set_status(3,5, unoccupied_slot)
+			set_status(6,4, occupied_slot)
+			set_statuses(4,4,2,6, occupied_slot)
+			-- Your task
 		ensure
-			board_set: True
-				-- Your task.
+			board_set: Current ~ bta.templates.plus_board
 		end
 
 	make_pyramid
 			-- Initialize a Pyramid board.
 		do
-			make_easy
-			-- Your task: the current implementation
-			-- may not be correct.
+			make_plus
+			set_status(6, 4, unoccupied_slot)
+			set_statuses(5,5,1,7, occupied_slot)
+			--set_statuses(4,4,2,6, occupied_slot) --redundancy
+			set_statuses(3,3,3,5, occupied_slot)
+			-- Your task
+
 		ensure
-			board_set: True
-				-- Your task.
+			board_set: Current ~ bta.templates.pyramid_board
 		end
 
 	make_arrow
 			-- Initialize a Arrow board.
 		do
-			make_easy
-			-- Your task: the current implementation
-			-- may not be correct.
+			make_cross
+			set_statuses(1,7,4,4, occupied_slot)
+			set_statuses(6,7, 3,5, occupied_slot)
+			set_statuses(2,3, 3,5, occupied_slot)
+			set_status(3,2,occupied_slot)
+			set_status(3,6,occupied_slot)-- Your task
 		ensure
-			board_set: True
-				-- Your task.
+			board_set: Current ~ bta.templates.arrow_board
 		end
 
 	make_diamond
 			-- Initialize a Diamond board.
 		do
-			make_easy
-			-- Your task: the current implementation
-			-- may not be correct.
+			make_arrow
+			set_statuses(4,4,1,7, occupied_slot)
+			set_statuses(3,5,2,6, occupied_slot)
+			set_statuses(2,2,3,5, occupied_slot)
+		--	set_statuses(6,6,3,5, occupied_slot) --redundant
+			set_status(4,4,unoccupied_slot)
+			-- Your task
 		ensure
-			board_set: True
-				-- Your task.
+			board_set: Current ~ bta.templates.diamond_board
 		end
 
 	make_skull
 			-- Initialize a Skull board.
 		do
-			make_easy
-			-- Your task: the current implementation
-			-- may not be correct.
+			make_diamond
+			set_statuses(1,7,3,5, occupied_slot)
+			set_statuses(3,5,2,6, occupied_slot)
+			set_status(4,1, unoccupied_slot)
+			set_status(4,3, unoccupied_slot)
+			set_status(4,5, unoccupied_slot)
+			set_status(4,7, unoccupied_slot)
+			-- Your task
 		ensure
-			board_set: True
-				-- Your task.
+			board_set: Current ~ bta.templates.skull_board
 		end
 
 feature -- Auxiliary Commands
@@ -157,34 +173,40 @@ feature -- Auxiliary Commands
 		end
 
 feature -- Auxiliary Queries
-	matches_slots_except (
-		other: BOARD; r1, r2, c1, c2: INTEGER)
-	: BOOLEAN
+	matches_slots_except
+	(other: BOARD; r1, r2, c1, c2: INTEGER)	: BOOLEAN
 			-- Do slots outside the intersection of
 			-- rows 'r1' to 'r2' and columns 'c1' and 'c2'
 			-- match in Current and 'other'.
 		require
-			consistent_row_numbers: True
-				-- Your task.
-			consistent_column_numbers: True
-				-- Your task.
-			valid_rows: True
-				-- Your task.
-			valid_columns: True
-				-- Your task.
-			valid_row_range: True
-				-- Your task.
-			valid_column_range: True
-				-- Your task.
+			consistent_row_numbers: other.number_of_rows = 7
+			consistent_column_numbers: other.number_of_columns = 7
+			valid_rows: (r1 <= 7) and (r1 >= 1) and (r2 >= 1) and (r2 <= 7)
+			valid_columns: (c1 <= 7) and (c1 >= 1) and (c2 >= 1) and (c2 <= 7)
+			valid_row_range: r1 <= r2
+			valid_column_range: c1 <= c2
 		do
-			-- Your task.
+			Result := true
+			from
+				y := 1
+				x := 1
+			until
+				(x := 7 and y := 7)
+			loop
+				if x >= r1 and x <= r2 and y >= c1 and y <= c2 then
+					Result := imp[y,x] /= imp[y.x]
+				end
+				y := y + 1
+				x := x + 1
+			end
+			-- Your task
 		ensure
 			correct_result: True
 				-- Your task.
 				-- Hint: write two nested across expressions to
 				-- iterate through all slots. Each slot is identified
 				-- by its row and column numbers. If the slot location
-				-- is not witin 'r1', 'r2', 'c1', and 'c2', then
+				-- is not within 'r1', 'r2', 'c1', and 'c2', then
 				-- its value in 'Current' is equal to that in 'other'.
 		end
 
