@@ -186,7 +186,6 @@ feature -- Auxiliary Commands
 				 end
 			end
 			slots_not_in_range_unchanged: matches_slots_except(old current,r1,r2,c1,c2)
-				-- Hint: Use query 'matches_slots_except'.
 		end
 
 feature -- Auxiliary Queries
@@ -308,20 +307,37 @@ feature -- Queries
 		require
 			valid_row: is_valid_row(r) = true
 			valid_column: is_valid_column(c) = true
-				-- Your task.
 		do
-			Result := ssa.unavailable_slot
-			-- Your task: the current implementation
-			-- may not be correct.
+			Result := imp.item (r, c)
+			-- Your task (done?)
 		ensure
 			correct_result: True
-				-- Your task.
+				Result = imp.item (r, c)
 		end
 
 	number_of_occupied_slots: INTEGER
 			-- Number of slots occupied by pegs on current board.
+		local
+			counter,x,y:INTEGER
 		do
-			-- Your task.
+			counter := 0
+			from
+				y := 0
+			until
+				y = (number_of_rows + 1)
+			loop
+				from
+					x := 0
+				until
+					x = (number_of_columns + 1)
+				loop
+					if status_of(x,y) ~ ssa.occupied_slot then
+						counter := counter + 1
+					end
+				end
+			end
+			Result := counter
+			-- Your task.(done?)
 			-- No postcondition is needed for this auxiliary query.
 		end
 
@@ -329,25 +345,60 @@ feature -- Equality
 	is_equal (other: like Current): BOOLEAN
 			-- Is current board equal to 'other'?
 		do
-			-- Your task.
+			Result := Current.out.is_equal (other.out)
 		ensure then
-			correct_result: True
-				-- Your task.
+			correct_result:
+			Result = Current.out.is_equal (other.out)
 		end
 
 feature -- Output
 	out: STRING
 			-- String representation of current board.
+		local
+			str:STRING
+			x,y:INTEGER
 		do
 			create Result.make_empty
-			-- Your task: the current implementation
-			-- may not be correct.
+			create str.make_empty
+			from
+				y := 1
+			until
+				y = (number_of_rows + 1)
+			loop
+				from
+					x := 1
+				until
+					x = number_of_columns + 2
+				loop
+					if status_of(x,y) ~ unavailable_slot
+						then
+						str.append ("*")
+						else if
+							status_of(x,y) ~ occupied_slot
+						then
+							str.append ("O")
+							else if
+								status_of(x,y) ~ unoccupied_slot
+							then
+								str.append (".")
+								else str.append ("%N")
+							end
+						end
+					end
+					if y = number_of_rows then
+						str.remove_tail (2) -- this removes the extra %N at the end 
+					end
+					x := x + 1
+				end
+				y := y + 1
+			end
+			-- Your task (done?)
 			-- No postcondition is needed for this query.
 		end
 
 feature {NONE} -- Implementation
 
-	ssa:SLOT_STATUS_ACCESS
+	ssa: SLOT_STATUS_ACCESS
 	bta: BOARD_TEMPLATES_ACCESS
 
 	-- Note: ARRAY2 takes row (y) and then column (x)
