@@ -135,18 +135,13 @@ feature -- Auxiliary Commands
 	set_status (r, c: INTEGER; status: SLOT_STATUS)
 			-- Set the status of slot at row 'r' and column 'c' to 'status'.
 		require
-			valid_row: True
-				-- Your task.
-			valid_column: True
-				-- Your task.
+			valid_row: is_valid_row(r)
+			valid_column: is_valid_column(c)
 		do
-			-- Your task.
+			imp.put (status, r, c)
 		ensure
-			slot_set: True
-				-- Your task.
-			slots_not_in_range_unchanged: True
-				-- Your task.
-				-- Hint: Use query 'matches_slots_except'.
+			slot_set: imp[r,c] ~ status
+			slots_not_in_range_unchanged: matches_slots_except(old current, r,r,c,c)
 		end
 
 	set_statuses (r1, r2, c1, c2: INTEGER; status: SLOT_STATUS)
@@ -154,21 +149,43 @@ feature -- Auxiliary Commands
 			-- intersection of rows 'r1' to 'r2' and
 			-- columns 'c1' to 'c2'.
 		require
-			valid_rows: True
-				-- Your task.
-			valid_columns: True
-				-- Your task.
-			valid_row_range: True
-				-- Your task.
-			valid_column_range: True
-				-- Your task.
+			valid_rows: is_valid_row(r1) and is_valid_row(r2)
+			valid_columns: is_valid_column(c1) and is_valid_column(c2)
+			valid_row_range: (r2 - r1) >= 0
+			valid_column_range: (c2 - c1) >= 0
+		local
+			x:INTEGER
+			y:INTEGER
 		do
-			-- Your task.
+			from
+				x := r1
+			until
+				x = r2 + 1
+			loop
+				from
+					y := c1
+				until
+					y = c2 + 1
+				loop
+					imp.put (status, y, x)
+					y := y + 1
+				end
+				x := x + 1
+			end
+			-- Your task(done?)
 		ensure
-			slots_in_range_set: True
-				-- Your task.
-			slots_not_in_range_unchanged: True
-				-- Your task.
+			slots_in_range_set:
+			across 1 |..| number_of_rows
+				 as i
+			all
+				across 1 |..| number_of_columns
+				 as  j
+				 all
+				 	(i.item >= r1 and i.item <= r2 and j.item >= c1 and j.item <= c2) implies
+				 		(status_of(i.item,j.item) ~ status)
+				 end
+			end
+			slots_not_in_range_unchanged: matches_slots_except(old current,r1,r2,c1,c2)
 				-- Hint: Use query 'matches_slots_except'.
 		end
 
@@ -179,29 +196,47 @@ feature -- Auxiliary Queries
 			-- rows 'r1' to 'r2' and columns 'c1' and 'c2'
 			-- match in Current and 'other'.
 		require
-			consistent_row_numbers: other.number_of_rows = 7
-			consistent_column_numbers: other.number_of_columns = 7
-			valid_rows: (r1 <= 7) and (r1 >= 1) and (r2 >= 1) and (r2 <= 7)
-			valid_columns: (c1 <= 7) and (c1 >= 1) and (c2 >= 1) and (c2 <= 7)
+			consistent_row_numbers: other.number_of_rows = number_of_rows
+			consistent_column_numbers: other.number_of_columns = number_of_columns
+			valid_rows: (r1 <= number_of_rows) and (r1 >= 1) and (r2 >= 1) and (r2 <= number_of_rows)
+			valid_columns: (c1 <= number_of_columns) and (c1 >= 1) and (c2 >= 1) and (c2 <= number_of_columns)
 			valid_row_range: r1 <= r2
 			valid_column_range: c1 <= c2
+		local
+			x,y:INTEGER
 		do
 			Result := true
 			from
 				y := 1
-				x := 1
+			--	x := 1
 			until
-				(x := 7 and y := 7)
+				 y = number_of_rows + 1
 			loop
-				if x >= r1 and x <= r2 and y >= c1 and y <= c2 then
-					Result := imp[y,x] /= imp[y.x]
+				from
+					x := 1
+				until
+					x = number_of_columns + 1
+				loop
+					if x < r1 or x > r2 or y < c1 or y > c2 then
+					Result := ((current.status_of (y,x)) ~ (other.status_of (y,x)))
+					end
+					x := x + 1
 				end
 				y := y + 1
-				x := x + 1
 			end
-			-- Your task
+			-- Your task (done?)
 		ensure
-			correct_result: True
+			correct_result:
+			(Result = true) implies
+			across 1 |..| number_of_rows as i
+			all
+				across
+				 1 |..| number_of_columns as j
+				all
+					(i.item < r1 or i.item > r2 or j.item < c1 or j.item > c2)
+					implies Current.status_of(i.item,j.item) ~ (other.status_of (i.item,j.item))
+				end
+			end
 				-- Your task.
 				-- Hint: write two nested across expressions to
 				-- iterate through all slots. Each slot is identified
@@ -238,46 +273,41 @@ feature -- Queries
 	number_of_rows: INTEGER
 			-- Number of rows in the board of game.
 		do
-			-- Your task.
+			Result := imp.height
 		ensure
-			correct_result: True
-				-- Your task.
+			correct_result: Result = imp.height
 		end
 
 	number_of_columns: INTEGER
 			-- Number of columns in the board of game.
 		do
-			-- Your task.
+			Result := imp.width
 		ensure
-			correct_result: True
-				-- Your task.
+			correct_result: Result = imp.height
 		end
 
 	is_valid_row (r: INTEGER): BOOLEAN
 			-- Is 'r' a valid row number?
 		do
-			-- Your task.
+			Result := (r >= 1 and r <= number_of_rows)
 		ensure
-			correct_result: True
-				-- Your task.
+			correct_result: Result = (r >= 1 and r <= number_of_rows)
 		end
 
 	is_valid_column (c: INTEGER): BOOLEAN
-			-- Is 'x' a valid column number?
+			-- Is 'c' a valid column number?
 		do
-			-- Your task.
+			Result := (c >= 1 and c <= number_of_columns)
 		ensure
-			correct_result: True
-				-- Your task.
+			correct_result: Result = (c >= 1 and c <= number_of_columns)
 		end
 
 	status_of (r, c: INTEGER): SLOT_STATUS
 			-- Is the slot at row 'r' and column 'c'
 			-- unavailable, occupied, or unoccupied?
 		require
-			valid_row: True
-				-- Your task.
-			valid_column: True
+			valid_row: is_valid_row(r) = true
+			valid_column: is_valid_column(c) = true
 				-- Your task.
 		do
 			Result := ssa.unavailable_slot
