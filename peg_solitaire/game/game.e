@@ -192,12 +192,12 @@ feature -- Status Queries
 			from
 				y := 1
 			until
-				y = (board.number_of_rows + 1)
+				y > (board.number_of_rows)
 			loop
 				from
 					x := 1
 				until
-					x = (board.number_of_columns + 1)
+					x > (board.number_of_columns)
 				loop
 					--check if (move_left) works
 					if x >= 3 and

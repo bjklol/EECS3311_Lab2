@@ -319,29 +319,20 @@ feature -- Queries
 
 	number_of_occupied_slots: INTEGER
 			-- Number of slots occupied by pegs on current board.
-		local
-			counter,x,y:INTEGER
 		do
-			counter := 0
-			from
-				y := 1
-			until
-				y = (number_of_rows + 1)
+			Result := 0
+			across
+				1 |..| 7 as i
 			loop
-				from
-					x := 1
-				until
-					x = (number_of_columns + 1)
+				across
+					1 |..| 7 as j
 				loop
-					if status_of (y,x) ~ occupied_slot then
-						counter := counter + 1
+					if imp.item (i.item, j.item).is_equal(ssa.occupied_slot) then
+						Result := Result + 1
 					end
 				end
 			end
-			Result := counter
-			-- Your task.(done?)
-			-- No postcondition is needed for this auxiliary query.
-		end
+end
 
 feature -- Equality
 	is_equal (other: like Current): BOOLEAN

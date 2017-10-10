@@ -43,5 +43,5 @@ invariant
  									--separate objects as opposed to chaceing only one for reference.
 and occupied_slot = occupied_slot
 and unoccupied_slot = unoccupied_slot
-	-- Your task.
+	-- Your task.(done)
 end

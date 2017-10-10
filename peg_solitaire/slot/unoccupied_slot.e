@@ -26,13 +26,12 @@ feature -- Output
 	out: STRING
 			-- String representation of current slot.
 		do
-			create Result.make_empty
+			create Result.make_filled ('.', 1)
+			Result := Result.to_string_8
 			-- Your task: the current implementation
 			-- may not be correct.
-
-			Result := "."
-
 		ensure then
-			correct_result: Result.is_equal (".")
+			correct_result:
+				Result ~ "." -- Your task. (amidone?)
 		end
 end

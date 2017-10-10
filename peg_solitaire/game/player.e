@@ -15,7 +15,8 @@ feature -- Constructor for descendant classes
 			templates := access.templates
 			create game.make_from_board (templates.default_board)
 		ensure
-			default_board_set: game.board.out ~ templates.default_board_out
+			default_board_set: True
+				-- Your task.
 		end
 
 feature -- Attributes

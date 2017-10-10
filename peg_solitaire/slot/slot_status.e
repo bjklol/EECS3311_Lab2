@@ -20,9 +20,7 @@ feature -- Equality
 			Result := Current.out ~ other.out--Current = other   --(done?)
 		ensure then
 			correct_result: -- Your Task(done?)
---				Result = Current.out ~ other.out
-			((Current = other) or ((Current = other) = false))
-
+			--	Result = Current.out ~ other.out
+			((Current = other) = TRUE) or ((Current = other) = FALSE)
 		end
-
 end
