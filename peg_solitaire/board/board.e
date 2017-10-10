@@ -140,7 +140,7 @@ feature -- Auxiliary Commands
 		do
 			imp.put (status, r, c)
 		ensure
-			slot_set: imp[r,c] ~ status
+			slot_set: imp.item(r,c) ~ status
 			slots_not_in_range_unchanged: matches_slots_except(old current, r,r,c,c)
 		end
 
@@ -157,22 +157,21 @@ feature -- Auxiliary Commands
 			x:INTEGER
 			y:INTEGER
 		do
-			from
-				x := r1
-			until
-				x = r2 + 1
+			across
+				1 |..| 7 as i
 			loop
-				from
-					y := c1
-				until
-					y = c2 + 1
+				across
+					1 |..| 7 as j
 				loop
-					imp.put (status, y, x)
-					y := y + 1
+					if
+						(i.item >= r1 and i.item <= r2) and
+						(j.item >= c1 and j.item <= c2)
+					then
+						imp.put (status, i.item, j.item)
+					end
+
 				end
-				x := x + 1
 			end
-			-- Your task(done?)
 		ensure
 			slots_in_range_set:
 			across 1 |..| number_of_rows
@@ -282,7 +281,7 @@ feature -- Queries
 		do
 			Result := imp.width
 		ensure
-			correct_result: Result = imp.height
+			correct_result: Result = imp.width
 		end
 
 	is_valid_row (r: INTEGER): BOOLEAN
@@ -296,7 +295,7 @@ feature -- Queries
 	is_valid_column (c: INTEGER): BOOLEAN
 			-- Is 'c' a valid column number?
 		do
-			Result := (c >= 1 and c <= number_of_columns)
+			Result := (c >= 1 and c <= Current.number_of_columns)
 		ensure
 			correct_result: Result = (c >= 1 and c <= number_of_columns)
 		end
@@ -308,7 +307,7 @@ feature -- Queries
 			valid_row: is_valid_row(r) = true
 			valid_column: is_valid_column(c) = true
 		do
-			Result := imp.item (r, c)
+			Result := imp.item(r, c)
 			-- Your task (done?)
 		ensure
 			correct_result: True
@@ -331,7 +330,7 @@ feature -- Queries
 				until
 					x = (number_of_columns + 1)
 				loop
-					if status_of(x,y) ~ ssa.occupied_slot then
+					if status_of (y,x) ~ ssa.occupied_slot then
 						counter := counter + 1
 					end
 				end
@@ -355,45 +354,39 @@ feature -- Output
 	out: STRING
 			-- String representation of current board.
 		local
-			str:STRING
-			x,y:INTEGER
+			string: STRING
 		do
 			create Result.make_empty
-			create str.make_empty
-			from
-				y := 1
-			until
-				y = (number_of_rows + 1)
+			create string.make_empty
+
+			across
+				1 |..| 7 as i
 			loop
-				from
-					x := 1
-				until
-					x = number_of_columns + 2
+
+				across
+					1 |..| 7 as j
 				loop
-					if status_of(x,y) ~ unavailable_slot
-						then
-						str.append ("*")
-						else if
-							status_of(x,y) ~ occupied_slot
-						then
-							str.append ("O")
-							else if
-								status_of(x,y) ~ unoccupied_slot
-							then
-								str.append (".")
-								else str.append ("%N")
-							end
-						end
+					if
+						imp.item (i.item, j.item).is_equal (ssa.occupied_slot)
+					then
+						string.append ("O")
+					elseif
+						imp.item (i.item, j.item).is_equal (ssa.unoccupied_slot)
+					then
+						string.append (".")
+					else
+						string.append ("*")
 					end
-					if y = number_of_rows then
-						str.remove_tail (2) -- this removes the extra %N at the end 
-					end
-					x := x + 1
 				end
-				y := y + 1
+
+				if
+					i.item < 7
+				then
+					string.append_character ('%N')
+				end
 			end
-			-- Your task (done?)
-			-- No postcondition is needed for this query.
+
+			Result := string
 		end
 
 feature {NONE} -- Implementation

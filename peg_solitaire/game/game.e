@@ -185,11 +185,98 @@ feature -- Status Queries
 	is_over: BOOLEAN
 			-- Is the current game 'over'?
 			-- i.e., no further movements are possible.
+		local
+			x,y:INTEGER
 		do
-			-- Your task.
+			Result := true
+			from
+				y := 1
+			until
+				y = (board.number_of_rows + 1)
+			loop
+				from
+					x := 1
+				until
+					x = (board.number_of_columns + 1)
+				loop
+					--check if (move_left) works
+					if x >= 3 and
+						board.status_of (y,x) ~ board.occupied_slot and
+						board.status_of (y, (x-1)) ~ board.occupied_slot and
+						board.status_of (y, (x-2)) ~ board.unoccupied_slot
+						then Result := false
+					end
+
+					--check if (move_right) works
+					if
+						x <= 5 and
+						board.status_of (y, x) ~ board.occupied_slot and
+			 			board.status_of (y, (x+1)) ~ board.occupied_slot and
+						board.status_of (y, (x+2)) ~ board.unoccupied_slot
+						then Result := false
+					end
+
+					--check if (move_up) works
+					if y <= 3 and
+						board.status_of (y, x) ~ board.occupied_slot and
+						board.status_of ((y-1), x) ~ board.occupied_slot and
+						board.status_of ((y-2), x) ~ board.unoccupied_slot
+						then Result := false
+					end
+
+					--check if (move_down) works
+					if y <= 5 and
+						board.status_of (y, x) ~ board.occupied_slot and
+						board.status_of ((y+1), x) ~ board.occupied_slot and
+						board.status_of ((y+2), x) ~ board.unoccupied_slot
+						then Result := false
+					end
+					x := x + 1
+				end
+				y := y + 1
+			end
 		ensure
-			correct_result: True
-				-- Your task.
+			correct_result:
+				across 1 |..| board.number_of_rows as i
+				all
+					across 1 |..| board.number_of_columns as j
+					all
+						(
+						j.item >= 3 and
+						board.status_of (i.item,j.item) ~ board.occupied_slot and
+						board.status_of (i.item, (j.item-1)) ~ board.occupied_slot and
+						board.status_of (i.item, (j.item-2)) ~ board.unoccupied_slot
+						)
+
+						or
+
+						(
+						j.item <= 5 and
+						board.status_of (i.item, j.item) ~ board.occupied_slot and
+			 			board.status_of (i.item, (j.item+1)) ~ board.occupied_slot and
+						board.status_of (i.item, (j.item+2)) ~ board.unoccupied_slot
+						)
+
+						or
+
+						(
+						i.item <= 3 and
+						board.status_of (i.item, j.item) ~ board.occupied_slot and
+						board.status_of ((i.item-1), j.item) ~ board.occupied_slot and
+						board.status_of ((i.item-2), j.item) ~ board.unoccupied_slot
+						)
+
+						or
+
+						(
+						i.item <= 5 and
+						board.status_of (i.item, j.item) ~ board.occupied_slot and
+						board.status_of ((i.item+1), j.item) ~ board.occupied_slot and
+						board.status_of ((i.item+2), j.item) ~ board.unoccupied_slot
+						)
+						implies (Result = false)
+					end
+				end
 				-- Hint: write two nested across expressions to
 				-- iterate through all slots. Each slot is identified
 				-- by its row and column numbers. If there is any
@@ -200,13 +287,17 @@ feature -- Status Queries
 			-- Has the current game been won?
 			-- i.e., there's only one occupied slot on the board.
 		do
-			-- Your task.
+			if (board.number_of_occupied_slots = 1) then
+				Result := true
+				else Result := false
+			end
+
+			-- Your task(done)
 		ensure
-			game_won_iff_one_occupied_slot_left: True
-				-- Your task.
-				-- Hint: Use 'number_of_occupied_slots' from BOARD.
+			game_won_iff_one_occupied_slot_left:
+				(Result = true) implies (board.number_of_occupied_slots = 1)
 			winning_a_game_means_game_over:
-				-- Your task.
+				(Result = true) implies (is_over = true)
 		end
 
 feature -- Output

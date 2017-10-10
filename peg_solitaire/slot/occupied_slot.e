@@ -26,12 +26,10 @@ feature -- Output
 	out: STRING
 			-- String representation of current slot.
 		do
-			create Result.make_filled ('O', 1)
-			Result := Result.to_string_8
-			-- Your task: the current implementation
-			-- may not be correct.
+			create Result.make_empty
+			Result := "O"
 		ensure then
 			correct_result:
-				Result ~ "O" -- Your task. (amidone?)
+				Result.is_equal("O") -- Your task. (amidone?)
 		end
 end
