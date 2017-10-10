@@ -149,6 +149,13 @@ invariant
 				]"
 
 	correct_cross_board_output:
+--**...**
+--**.O.**
+--...O...
+--..OOO..
+--...O...
+--**...**
+--**...**
 		cross_board_out ~ "[
 			**...**
 			**.O.**
@@ -182,6 +189,13 @@ invariant
 			]"
 
 	correct_arrow_board_output:
+--**.O.**
+--**OOO**
+--.OOOOO.
+--..OOO..
+--...O...
+--**OOO**
+--**OOO**
 		arrow_board_out ~ "[
 			**.O.**
 			**OOO**

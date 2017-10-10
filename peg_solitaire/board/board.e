@@ -56,7 +56,7 @@ feature -- Constructor
 			set_statuses(1,7,3,5, unoccupied_slot)
 			set_statuses(3,5,1,7, unoccupied_slot)
 			set_statuses(2,5,4,4, occupied_slot)
-			set_statuses(4,4,3,5, occupied_slot)
+			set_statuses(3,3,3,5, occupied_slot)
 			-- Your task
 		ensure
 			board_set: Current ~ bta.templates.cross_board
@@ -108,9 +108,11 @@ feature -- Constructor
 			make_arrow
 			set_statuses(4,4,1,7, occupied_slot)
 			set_statuses(3,5,2,6, occupied_slot)
-			set_statuses(2,2,3,5, occupied_slot)
+		--	set_statuses(2,2,3,5, occupied_slot) --redundant
 		--	set_statuses(6,6,3,5, occupied_slot) --redundant
 			set_status(4,4,unoccupied_slot)
+			set_status(7,3,unoccupied_slot)
+			set_status(7,5,unoccupied_slot)
 			-- Your task
 		ensure
 			board_set: Current ~ bta.templates.diamond_board
@@ -140,7 +142,7 @@ feature -- Auxiliary Commands
 		do
 			imp.put (status, r, c)
 		ensure
-			slot_set: imp.item(r,c) ~ status
+			slot_set: imp.item(r,c).is_equal(status)
 			slots_not_in_range_unchanged: matches_slots_except(old current, r,r,c,c)
 		end
 
@@ -287,9 +289,10 @@ feature -- Queries
 	is_valid_row (r: INTEGER): BOOLEAN
 			-- Is 'r' a valid row number?
 		do
-			Result := (r >= 1 and r <= number_of_rows)
+			Result := (r >= 1 and r <= current.number_of_rows)
 		ensure
-			correct_result: Result = (r >= 1 and r <= number_of_rows)
+			correct_result: (r >= 1 and r <= Current.number_of_rows) implies (Result = True)
+--			Result = (r >= 1 and r <= current.number_of_rows)
 		end
 
 	is_valid_column (c: INTEGER): BOOLEAN
@@ -304,13 +307,13 @@ feature -- Queries
 			-- Is the slot at row 'r' and column 'c'
 			-- unavailable, occupied, or unoccupied?
 		require
-			valid_row: is_valid_row(r) = true
-			valid_column: is_valid_column(c) = true
+			valid_row: is_valid_row(r)
+			valid_column: is_valid_column(c)
 		do
 			Result := imp.item(r, c)
 			-- Your task (done?)
 		ensure
-			correct_result: True
+			correct_result:
 				Result = imp.item (r, c)
 		end
 
@@ -321,16 +324,16 @@ feature -- Queries
 		do
 			counter := 0
 			from
-				y := 0
+				y := 1
 			until
 				y = (number_of_rows + 1)
 			loop
 				from
-					x := 0
+					x := 1
 				until
 					x = (number_of_columns + 1)
 				loop
-					if status_of (y,x) ~ ssa.occupied_slot then
+					if status_of (y,x) ~ occupied_slot then
 						counter := counter + 1
 					end
 				end
@@ -367,11 +370,11 @@ feature -- Output
 					1 |..| 7 as j
 				loop
 					if
-						imp.item (i.item, j.item).is_equal (ssa.occupied_slot)
+						imp.item (i.item, j.item).is_equal (occupied_slot)
 					then
 						string.append ("O")
 					elseif
-						imp.item (i.item, j.item).is_equal (ssa.unoccupied_slot)
+						imp.item (i.item, j.item).is_equal (unoccupied_slot)
 					then
 						string.append (".")
 					else
