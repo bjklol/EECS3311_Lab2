@@ -15,7 +15,7 @@ feature -- Accesses
 		once
 			-- Your task: the current implementation
 			-- may not be correct.
-			create {UNAVAILABLE_SLOT} Result.make
+			create {UNAVAILABLE_SLOT} Result.make -- not necessary to write {UNAVAILABLE_SLOT} since it's already expected
 		end
 
 	occupied_slot: OCCUPIED_SLOT
@@ -40,7 +40,7 @@ invariant
  									--to make a new unavailable slot. Because we
  									--made it a singleton (using 'once'), the equality ('=') returns true.
  									--Change 'once' to 'do' to see it fail the test case by making two
- 									--separate objects as opposed to chaceing only one for reference.
+ 									--separate objects as opposed to only one for reference.
 and occupied_slot = occupied_slot
 and unoccupied_slot = unoccupied_slot
 	-- Your task.(done)

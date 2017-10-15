@@ -9,11 +9,12 @@ expanded class
 
 feature -- Access to board templates
 	templates: BOARD_TEMPLATES
-		once -- I changed 'do' to 'once'
-			create {BOARD_TEMPLATES} Result.make
+		once
+			-- Your task: the current implementation
+			-- may not be correct.
+			create {BOARD_TEMPLATES} Result.make -- not necessary to include {BOARD_TEMPLATES as that is already expected}
 		end
 
 invariant
-	singleton_templates: -- (done)
-		templates = templates
+	singleton_templates: templates = templates
 end

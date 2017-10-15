@@ -139,8 +139,8 @@ feature -- Commands
 		require
 			from_slot_valid_column: c >= 1 and c <= board.number_of_columns
 			from_slot_valid_row: r >= 3 and r <= board.number_of_rows
-			middle_slot_valid_row: r >= 2 and r <= (board.number_of_rows - 1)
-			to_slot_valid_row: r >= 1 and r <= (board.number_of_rows - 2)
+			middle_slot_valid_row: (r-1) >= 2 and (r-1) <= (board.number_of_rows - 1)
+			to_slot_valid_row: (r-2) >= 1 and (r-2) <= (board.number_of_rows - 2)
 			from_slot_occupied: board.status_of (r, c) ~ board.occupied_slot
 			middle_slot_occupied: board.status_of ((r-1), c) ~ board.occupied_slot
 			to_slot_unoccupied: board.status_of ((r-2), c) ~ board.unoccupied_slot
@@ -162,8 +162,8 @@ feature -- Commands
 		require
 			from_slot_valid_column: c >= 1 and c <= board.number_of_columns
 			from_slot_valid_row: r >= 1 and r <= (board.number_of_rows - 2)
-			middle_slot_valid_row: r >= 2 and r <= (board.number_of_rows - 1)
-			to_slot_valid_row: r >= 3 and r <= (board.number_of_rows)
+			middle_slot_valid_row: (r+1) >= 2 and (r+1) <= (board.number_of_rows - 1)
+			to_slot_valid_row: (r+2) >= 3 and (r+2) <= (board.number_of_rows)
 			from_slot_occupied: board.status_of (r, c) ~ board.occupied_slot
 			middle_slot_occupied: board.status_of ((r+1), c) ~ board.occupied_slot
 			to_slot_unoccupied: board.status_of ((r+2), c) ~ board.unoccupied_slot
@@ -192,12 +192,12 @@ feature -- Status Queries
 			from
 				y := 1
 			until
-				y > (board.number_of_rows)
+				y = (board.number_of_rows + 1)
 			loop
 				from
 					x := 1
 				until
-					x > (board.number_of_columns)
+					x = (board.number_of_columns + 1)
 				loop
 					--check if (move_left) works
 					if x >= 3 and
@@ -217,7 +217,7 @@ feature -- Status Queries
 					end
 
 					--check if (move_up) works
-					if y <= 3 and
+					if y >= 3 and
 						board.status_of (y, x) ~ board.occupied_slot and
 						board.status_of ((y-1), x) ~ board.occupied_slot and
 						board.status_of ((y-2), x) ~ board.unoccupied_slot
@@ -241,6 +241,7 @@ feature -- Status Queries
 				all
 					across 1 |..| board.number_of_columns as j
 					all
+						--can move left
 						(
 						j.item >= 3 and
 						board.status_of (i.item,j.item) ~ board.occupied_slot and
@@ -249,7 +250,7 @@ feature -- Status Queries
 						)
 
 						or
-
+						--can move right
 						(
 						j.item <= 5 and
 						board.status_of (i.item, j.item) ~ board.occupied_slot and
@@ -258,16 +259,16 @@ feature -- Status Queries
 						)
 
 						or
-
+						--can move up
 						(
-						i.item <= 3 and
+						i.item >= 3 and
 						board.status_of (i.item, j.item) ~ board.occupied_slot and
 						board.status_of ((i.item-1), j.item) ~ board.occupied_slot and
 						board.status_of ((i.item-2), j.item) ~ board.unoccupied_slot
 						)
 
 						or
-
+						--can move down
 						(
 						i.item <= 5 and
 						board.status_of (i.item, j.item) ~ board.occupied_slot and

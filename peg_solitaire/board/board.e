@@ -160,10 +160,10 @@ feature -- Auxiliary Commands
 			y:INTEGER
 		do
 			across
-				1 |..| 7 as i
+				1 |..| number_of_rows as i
 			loop
 				across
-					1 |..| 7 as j
+					1 |..| current.number_of_columns as j
 				loop
 					if
 						(i.item >= r1 and i.item <= r2) and
@@ -218,7 +218,7 @@ feature -- Auxiliary Queries
 					x = number_of_columns + 1
 				loop
 					if x < r1 or x > r2 or y < c1 or y > c2 then
-					Result := ((current.status_of (y,x)) ~ (other.status_of (y,x)))
+					Result := (( status_of (y,x)) ~ (other.status_of (y,x)))
 					end
 					x := x + 1
 				end
@@ -234,7 +234,7 @@ feature -- Auxiliary Queries
 				 1 |..| number_of_columns as j
 				all
 					(i.item < r1 or i.item > r2 or j.item < c1 or j.item > c2)
-					implies Current.status_of(i.item,j.item) ~ (other.status_of (i.item,j.item))
+					implies  status_of(i.item,j.item) ~ (other.status_of (i.item,j.item))
 				end
 			end
 				-- Your task.
@@ -289,16 +289,16 @@ feature -- Queries
 	is_valid_row (r: INTEGER): BOOLEAN
 			-- Is 'r' a valid row number?
 		do
-			Result := (r >= 1 and r <= current.number_of_rows)
+			Result := (r >= 1 and r <=  number_of_rows)
 		ensure
-			correct_result: (r >= 1 and r <= Current.number_of_rows) implies (Result = True)
---			Result = (r >= 1 and r <= current.number_of_rows)
+			correct_result: (r >= 1 and r <=  number_of_rows) implies (Result = True)
+--			Result = (r >= 1 and r <= number_of_rows)
 		end
 
 	is_valid_column (c: INTEGER): BOOLEAN
 			-- Is 'c' a valid column number?
 		do
-			Result := (c >= 1 and c <= Current.number_of_columns)
+			Result := (c >= 1 and c <= number_of_columns)
 		ensure
 			correct_result: Result = (c >= 1 and c <= number_of_columns)
 		end
@@ -322,10 +322,10 @@ feature -- Queries
 		do
 			Result := 0
 			across
-				1 |..| 7 as i
+				1 |..| number_of_rows as i
 			loop
 				across
-					1 |..| 7 as j
+					1 |..| number_of_columns as j
 				loop
 					if imp.item (i.item, j.item).is_equal(ssa.occupied_slot) then
 						Result := Result + 1
@@ -338,10 +338,10 @@ feature -- Equality
 	is_equal (other: like Current): BOOLEAN
 			-- Is current board equal to 'other'?
 		do
-			Result := Current.out.is_equal (other.out)
+			Result := out.is_equal (other.out)
 		ensure then
 			correct_result:
-			Result = Current.out.is_equal (other.out)
+			Result = out.is_equal (other.out)
 		end
 
 feature -- Output
@@ -354,11 +354,11 @@ feature -- Output
 			create string.make_empty
 
 			across
-				1 |..| 7 as i
+				1 |..| number_of_rows as i
 			loop
 
 				across
-					1 |..| 7 as j
+					1 |..| number_of_columns as j
 				loop
 					if
 						imp.item (i.item, j.item).is_equal (occupied_slot)
@@ -374,7 +374,7 @@ feature -- Output
 				end
 
 				if
-					i.item < 7
+					i.item < number_of_rows
 				then
 					string.append_character ('%N')
 				end
