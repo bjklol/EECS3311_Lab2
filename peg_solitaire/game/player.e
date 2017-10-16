@@ -1,3 +1,4 @@
+
 note
 	description: "A peg solitaire game player."
 	author: ""

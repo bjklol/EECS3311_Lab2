@@ -27,8 +27,6 @@ feature -- Output
 			-- String representation of current slot.
 		do
 			create Result.make_empty
-			-- Your task: the current implementation
-			-- may not be correct.
 
 			Result := "."
 

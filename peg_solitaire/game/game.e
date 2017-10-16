@@ -1,8 +1,8 @@
 note
 	description: "A game of peg solitaire."
-	author: ""
-	date: "$Date$"
-	revision: "$Revision$"
+	author: "Benjamin Korobkin"
+	date: "October 17, 2017"
+	revision: "N/A"
 
 class
 	GAME

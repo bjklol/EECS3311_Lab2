@@ -30,6 +30,6 @@ feature -- Output
 			Result := "O"
 		ensure then
 			correct_result:
-				Result.is_equal("O") -- Your task. (amidone?)
+				Result.is_equal("O") 
 		end
 end
