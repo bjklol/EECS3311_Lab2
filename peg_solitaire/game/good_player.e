@@ -205,160 +205,160 @@ feature -- Commands
 		require
 			current_game_is_plus:
 			game.out ~ "[
-				Game is over: No
-				Game is won : No
-				Board Status:
-				**...**
-				**.O.**
-				...O...
-				.OOOOO.
-				...O...
-				**.O.**
-				**...**
+			Game is over: No
+			Game is won : No
+			Board Status:
+			**...**
+			**.O.**
+			...O...
+			.OOOOO.
+			...O...
+			**.O.**
+			**...**
 				]"
 		local
 			assertion: BOOLEAN
 		do
 			assertion :=
-			game.out = "[
-				Game is over: No
-				Game is won : No
-				Board Status:
-				**...**
-				**.O.**
-				...O...
-				.OOOOO.
-				...O...
-				**.O.**
-				**...**
+			game.out ~ "[
+			Game is over: No
+			Game is won : No
+			Board Status:
+			**...**
+			**.O.**
+			...O...
+			.OOOOO.
+			...O...
+			**.O.**
+			**...**
 				]"
 			check assertion end
 
 			game.move_down (5,4)
 			assertion :=
-			game.out = "[
-				Game is over: No
-				Game is won : No
-				Board Status:
-				**...**
-				**.O.**
-				...O...
-				.OOOOO.
-				.......
-				**...**
-				**.O.**
+			game.out ~ "[
+			Game is over: No
+			Game is won : No
+			Board Status:
+			**...**
+			**.O.**
+			...O...
+			.OOOOO.
+			.......
+			**...**
+			**.O.**
 				]"
 			check assertion end
 
 			game.move_down (3,4)
 			assertion :=
-			game.out = "[
-				Game is over: No
-				Game is won : No
-				Board Status:
-				**...**
-				**.O.**
-				.......
-				.OO.OO.
-				...O...
-				**...**
-				**.O.**
+			game.out ~ "[
+			Game is over: No
+			Game is won : No
+			Board Status:
+			**...**
+			**.O.**
+			.......
+			.OO.OO.
+			...O...
+			**...**
+			**.O.**
 				]"
 			check assertion end
 
 			game.move_left (4,6)
 			assertion :=
-			game.out = "[
-				Game is over: No
-				Game is won : No
-				Board Status:
-				**...**
-				**.O.**
-				.......
-				.OOO...
-				...O...
-				**...**
-				**.O.**
+			game.out ~ "[
+			Game is over: No
+			Game is won : No
+			Board Status:
+			**...**
+			**.O.**
+			.......
+			.OOO...
+			...O...
+			**...**
+			**.O.**
 				]"
 			check assertion end
 
 			game.move_down (4,4)
 			assertion :=
-			game.out = "[
-				Game is over: No
-				Game is won : No
-				Board Status:
-				**...**
-				**.O.**
-				.......
-				.OO....
-				.......
-				**.O.**
-				**.O.**
+			game.out ~ "[
+			Game is over: No
+			Game is won : No
+			Board Status:
+			**...**
+			**.O.**
+			.......
+			.OO....
+			.......
+			**.O.**
+			**.O.**
 				]"
 			check assertion end
 
 			game.move_right (4,2)
 			assertion :=
-			game.out = "[
-				Game is over: No
-				Game is won : No
-				Board Status:
-				**...**
-				**.O.**
-				.......
-				...O...
-				.......
-				**.O.**
-				**.O.**
+			game.out ~ "[
+			Game is over: No
+			Game is won : No
+			Board Status:
+			**...**
+			**.O.**
+			.......
+			...O...
+			.......
+			**.O.**
+			**.O.**
 				]"
 			check assertion end
 
 			game.move_up (7,4)
 			assertion :=
-			game.out = "[
-				Game is over: No
-				Game is won : No
-				Board Status:
-				**...**
-				**.O.**
-				.......
-				...O...
-				...O...
-				**...**
-				**...**
+			game.out ~ "[
+			Game is over: No
+			Game is won : No
+			Board Status:
+			**...**
+			**.O.**
+			.......
+			...O...
+			...O...
+			**...**
+			**...**
 				]"
 			check assertion end
 
 			game.move_up (5,4)
 			assertion :=
-			game.out = "[
-				Game is over: No
-				Game is won : No
-				Board Status:
-				**...**
-				**.O.**
-				...O...
-				.......
-				.......
-				**...**
-				**...**
+			game.out ~ "[
+			Game is over: No
+			Game is won : No
+			Board Status:
+			**...**
+			**.O.**
+			...O...
+			.......
+			.......
+			**...**
+			**...**
 				]"
 			check assertion end
 
 			game.move_up (3,4)
 			assertion :=
-			game.out = "[
-				Game is over: Yes
-				Game is won : Yes
-				Board Status:
-				**.O.**
-				**...**
-				.......
-				.......
-				.......
-				**...**
-				**...**
+			game.out ~ "[
+			Game is over: Yes
+			Game is won : Yes
+			Board Status:
+			**.O.**
+			**...**
+			.......
+			.......
+			.......
+			**...**
+			**...**
 				]"
 			check assertion end
 

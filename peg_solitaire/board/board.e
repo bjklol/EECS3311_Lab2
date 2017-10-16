@@ -204,6 +204,7 @@ feature -- Auxiliary Queries
 			valid_column_range: c1 <= c2
 		local
 			x,y:INTEGER
+			flag:BOOLEAN
 		do
 			Result := true
 			from
@@ -218,7 +219,10 @@ feature -- Auxiliary Queries
 					x = number_of_columns + 1
 				loop
 					if x < r1 or x > r2 or y < c1 or y > c2 then
-					Result := (( status_of (y,x)) ~ (other.status_of (y,x)))
+					flag := ((status_of (y,x)) ~ (other.status_of (y,x)))
+						if flag = false then
+							Result := false
+						end
 					end
 					x := x + 1
 				end
@@ -234,10 +238,9 @@ feature -- Auxiliary Queries
 				 1 |..| number_of_columns as j
 				all
 					(i.item < r1 or i.item > r2 or j.item < c1 or j.item > c2)
-					implies  status_of(i.item,j.item) ~ (other.status_of (i.item,j.item))
+					implies status_of(i.item,j.item) ~ (other.status_of (i.item,j.item))
 				end
 			end
-				-- Your task.
 				-- Hint: write two nested across expressions to
 				-- iterate through all slots. Each slot is identified
 				-- by its row and column numbers. If the slot location
